@@ -4,6 +4,10 @@ div.menu_down {
 	display: inline-block;
 }
 
+div.menu_down a {
+	cursor: pointer;
+}
+
 div.menu_down>a {
 	max-width: 100%;
 	overflow: hidden;
@@ -15,8 +19,12 @@ div.menu_down>a {
 	white-space: nowrap;
 }
 
-div.menu_down a {
-	cursor: pointer;
+
+
+div.menu_down>p{
+	overflow: hidden;
+	line-height: normal;
+	margin: 0;
 }
 
 div.menu_down>div {
@@ -102,7 +110,6 @@ div.menu_down ul>li {
 }
 
 div.menu_down li>a {
-	/*padding-right: 15px;*/
 	padding: 8px 10px;
 	font-weight: 400;
 	display: block;
@@ -121,6 +128,7 @@ div.menu_down li>a:hover, div.menu_down li.selected a{
 	color: #fff;
 	background-color: #149fe9;
 }
+
 
 div.menu_down ul>span {
 	padding: 8px 10px;

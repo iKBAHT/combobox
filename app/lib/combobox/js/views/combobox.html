@@ -1,5 +1,6 @@
 <div class="menu_down">
-	<a ng-click="openPopup()">{{getCurrentItem()}}</a>
+	<a ng-click="openPopup()" ng-if="!disable">{{getCurrentItem()}}</a>
+	<p ng-if="disable">{{getCurrentItem()}}</p>
 	<div ng-class="{'hide': !isShowPopup}">
 		<div class="arrow"></div>
 		<div class="search" ng-show="isShowSearch">

@@ -76,6 +76,22 @@
 			return combobox;
 		};
 
+		function createDisableComboboxOptions () {
+			
+			var combobox = {
+				selected: {
+					id: '123',
+					value: 'disabled element'
+				},
+				list: [],
+				disable: true
+			};
+			$timeout(function() {
+				//combobox.disable = false;
+			}, 2000);
+			return combobox;
+		};
+
 		function createBigComboboxOptions (size) {
 			var selectList = [],
 				wordLength = 8;
@@ -114,6 +130,7 @@
 		$scope.simpleCombobox = createSimpleComboboxOptions();
 		$scope.emptyCombobox = createEmptyComboboxOptions();
 		$scope.remoteCombobox = createRemoteComboboxOptions();
+		$scope.disableCombobox = createDisableComboboxOptions();
 		$scope.bigCombobox = createBigComboboxOptions(100);
 	}
 })(angular.module('testApp'));
