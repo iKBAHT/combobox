@@ -3,16 +3,37 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Combobox</title>
+		<link rel="stylesheet" href="styles/base.css">
 		<link rel="stylesheet" href="lib/combobox/styles/style.css">
 		<style>[ng-cloak] { display: none; }</style>
 	</head>
 	<body ng-app="testApp" ng-cloak>
-		<div ng-controller="exampleController">
-			<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
-			</combobox>	
-			<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
-			</combobox>	
-		</div>
+		<section ng-controller="exampleController">
+			<div class="center">
+				<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
+				</combobox>	
+				<combobox model="bigCombobox.selected" source="bigCombobox.list" options="bigCombobox.options" on-item-selected="bigCombobox.onSelect" disable="bigCombobox.disable">
+				</combobox>	
+				<combobox model="emptyCombobox.selected" source="emptyCombobox.list" options="emptyCombobox.options" on-item-selected="emptyCombobox.onSelect" disable="emptyCombobox.disable">
+				</combobox>	
+			</div>
+			<div class="lt">
+				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
+				</combobox>	
+			</div>
+			<div class="lb">
+				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
+				</combobox>	
+			</div>
+			<div class="rt">
+				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
+				</combobox>	
+			</div>
+			<div class="rb">
+				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
+				</combobox>	
+			</div>
+		</section>
 		
 		<script src="bower_components/jquery/dist/jquery.js"></script>
 		<script src="bower_components/angular/angular.js"></script>

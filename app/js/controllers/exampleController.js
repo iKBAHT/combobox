@@ -13,10 +13,10 @@
 				value: 'orange',
 				id: 2
 			}, {
-				value: '<h1>tree</h1>',
+				value: 'cherry',
 				id: 3
 			}, {
-				value: 'potato',
+				value: 'strawberry',
 				id: 4
 			}];
 			var combobox = {
@@ -26,6 +26,18 @@
 				onSelect: function (newItem) {
 					console.log('new item is ' + newItem.value);
 				}
+			};
+			return combobox;
+		};
+
+		function createEmptyComboboxOptions () {
+			var selectList = [];
+			var combobox = {
+				selected: {
+					id: '123',
+					value: 'Иванов Иван'
+				},
+				list: selectList				
 			};
 			return combobox;
 		};
@@ -40,6 +52,12 @@
 			}, {
 				value: 'тумбочка',
 				id: 3
+			}, {
+				value: 'шкаф',
+				id: 4
+			}, {
+				value: 'дверь',
+				id: 5
 			}];
 			var combobox = {
 				list: function  () {
@@ -57,8 +75,45 @@
 			};
 			return combobox;
 		};
+
+		function createBigComboboxOptions (size) {
+			var selectList = [],
+				wordLength = 8;
+
+			for (var i=0;i<size;++i){
+				selectList.push(generateItem());
+			}
+
+			function generateItem() {
+				generateItem.count = generateItem.count || 0;
+				return {
+					value: generateWord(),
+					id: generateItem.count++
+				}
+			}
+
+			function generateWord() {
+				var charSet = 'abcdefghigklmnopqrstuvwxyz',
+					word = '';
+
+				for (var j=0;j<wordLength;++j){
+					word += charSet.charAt(Math.floor(Math.random()*26));
+				}
+				return word;
+			}
+			var combobox = {
+				selected: selectList[0],
+				list: selectList,
+				onSelect: function (newItem) {
+					console.log('new item is ' + newItem.id);
+				}
+			};
+			return combobox;
+		}; 
 		
 		$scope.simpleCombobox = createSimpleComboboxOptions();
+		$scope.emptyCombobox = createEmptyComboboxOptions();
 		$scope.remoteCombobox = createRemoteComboboxOptions();
+		$scope.bigCombobox = createBigComboboxOptions(100);
 	}
 })(angular.module('testApp'));

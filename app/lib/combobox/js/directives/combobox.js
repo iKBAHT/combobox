@@ -15,23 +15,37 @@
 				onItemSelected: '=',
 				disable: '='
 			},
-			link: function ($scope, element, attrs) {
+			link: function ($scope, element) {
 				var options = angular.extend({
 					lazyLoad: false,
-					emptyText: "Нет",
-					noResultText: "Не найдено",
-					listEmptyText: "Список пуст",
-					countToShowSearch: 4 // после какого количества элементов надо показывать поиск
-				}, $scope.options);
+					emptyText: 'Нет', // показывается когда не задан текущий выбранный элемент
+					noResultText: 'Не найдено', // показывается когда поиск не дал результата
+					listEmptyText: 'Список пуст', // показывается когда нет списка вариантов
+					defaultSearchText: 'Поиск',
+					needSearch: true,  // показывать ли окно поиска. если false, то не показывать никогда, если true, то в зависимости от countToShowSearch
+					countToShowSearch: 4, // после какого количества элементов надо показывать поиск
+					itemsToShow: 6 // сколько элементов влезает до появления скролла
+				}, $scope.options || {});
 
-				$scope.isShow = false;
+				var list, // полный список вариантов
+					filtredList, // список вариантов, удовлетворяющих текущему поиску
+					listStartLoad = false,
+					listContainer = element.children('div'),
+					itemHeight = 29;
 
-				var list,
-					listStartLoad = false;
+				listContainer.find('ul').css({
+					'max-height': options.itemsToShow*itemHeight + 'px'
+				});
+
+				$scope.isShowPopup = false;
+				$scope.isShowSearch = false;
+				$scope.noResultText = options.noResultText;
+				$scope.listEmptyText = options.listEmptyText;
+				$scope.placeholderText = options.defaultSearchText;
 
 				if (angular.isArray($scope.source)){
 					// в качестве источника массив
-					list = $scope.source;
+					setSource($scope.source);
 				} else if (angular.isFunction($scope.source)) {
 					// в качестве источника promise
 					if (!options.lazyLoad){
@@ -47,7 +61,7 @@
 						if (!angular.isArray(items)){
 							throw new TypeError('combobox source promise function must return array');
 						}
-						list = items;
+						setSource(items);
 						listStartLoad = false;
 					});
 				};
@@ -55,21 +69,77 @@
 				function isListNeedToLoad() {
 					return !(list || listStartLoad);
 				}
+
+				function setSource(items) {
+					filtredList = list = items;
+					if (options.needSearch && (list.length > options.countToShowSearch)){
+						$scope.isShowSearch = true;
+					}
+				}
+
+				function findItemsByText(text) {
+					var findedItems = [];
+					if (!text) {
+						return list;
+					}
+					for(var i=0, length=list.length;i<length;++i){
+						if (list[i].value.indexOf(text) !== -1){
+							findedItems[findedItems.length] = list[i];
+						}
+					}
+					return findedItems;
+				}
+
+				$scope.isNeedShowNoResultText = function () {
+					return $scope.searchText && filtredList.length === 0;
+				}
+
+				$scope.isNeedShowListEmptyText = function () {
+					return isListNeedToLoad() == false && list.length === 0;
+				}
+
+				$scope.search = function  () {
+					filtredList = findItemsByText($scope.searchText);
+				}
 				
 				$scope.getCurrentItem = function () {
 					return $scope.model && $scope.model.value || options.emptyText;
 				};
 
 				$scope.getSource = function () {
-					return list || [];
+					return filtredList || [];
 				};
 
 				$scope.openPopup = function () {
-					$scope.isShow = !$scope.isShow;
 					if (isListNeedToLoad()){
 						loadItemsFromPromise();
 					}
-				}
+					$scope.isShowPopup = !$scope.isShowPopup;
+					if ($scope.isShowPopup){
+						var deltaHeight =  $(window).height() - element.offset().top - element.height(),
+							innerHeight = listContainer.outerHeight(),
+	                    	infoCssSettings = {};
+
+	                    if (deltaHeight < innerHeight){
+	                        listContainer.addClass('top');
+	                        infoCssSettings = {
+	                            bottom: getOffset(),
+	                            top: 'auto',
+	                        };
+	                    } else {
+	                        infoCssSettings = {
+	                            top: getOffset(),
+	                            bottom: 'auto',
+	                        };
+	                    }
+
+	                    listContainer.css(infoCssSettings);
+					}
+
+					function getOffset() {
+						return element.outerHeight() + 5;
+					};					
+				};
 
 				// закрытие попапа при клике вне попапа
 				var popupCloseListener = {
@@ -104,12 +174,14 @@
 				};				
 
 				popupCloseListener.add(function  () {
-					$scope.isShow = false;
+					$scope.isShowPopup = false;
 				});
 
 				itemSelectListener.add(function (selectedItem) {
-					$scope.isShow = false;
+					$scope.isShowPopup = false;
 					$scope.model = selectedItem;
+					$scope.searchText = '';
+					$scope.search();
 					if (angular.isFunction($scope.onItemSelected)){
 						$scope.onItemSelected(selectedItem);
 					}

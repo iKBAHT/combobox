@@ -20,8 +20,6 @@ div.menu_down a {
 }
 
 div.menu_down>div {
-	top: 32px;
-	bottom: auto;
 	max-width: 220px;
 
 	/*top: 0;*/
@@ -37,12 +35,62 @@ div.menu_down>div {
 	box-shadow: 0 2px 25px rgba(0,15,20,.15),0 0 1px 1px rgba(0,0,0,.15);
 }
 
+div.menu_down>div.top {
+	top: auto;
+	bottom: 0;
+}
+
+div.menu_down>div.hide {
+	display: none;
+	opacity: 0;
+}
+
+div.menu_down div.arrow { 
+	height: 10px;
+	background: url("../images/arrow_up.gif") no-repeat 10px bottom;
+	display: block;
+	position: absolute;
+	top: -10px; 
+	left: 0;
+	width: 100%;
+}
+
+div.top>div.arrow {
+	top: auto;
+	bottom: -10px;
+	background-image: url("../images/arrow_down.gif");
+	background-position: 10px top;
+}
+
+div.menu_down .search {
+	padding: 7px;
+	border-bottom: 1px solid #dce0e2;
+}
+
+div.menu_down .search>input {
+	border: none;
+	height: 31px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0;
+	vertical-align: middle;
+	font-size: 13px;
+	display: inline-block;
+	line-height: normal;
+	border-radius: 3px;
+	font-family: Arial,Tahoma;
+	color: #253035;
+	padding: 0 6px;
+}
+
 div.menu_down ul {
-	max-height: 600px;
+	max-height: 300px;
 	overflow-y: auto;
 
 	text-align: left;
-	overflow: hidden;
+	overflow: auto;
 	position: relative;
 	list-style: none;
 	padding: 5px 0;
@@ -72,4 +120,11 @@ div.menu_down li>a {
 div.menu_down li>a:hover {
 	color: #fff;
 	background-color: #149fe9;
+}
+
+div.menu_down ul>span {
+	padding: 8px 10px;
+	display: block;
+	color: #bbb;
+	font-size: 15px;
 }

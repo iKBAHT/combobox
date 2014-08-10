@@ -1,0 +1,37 @@
+section>div {
+	margin: 10px;
+	width: 100px;
+}
+
+/*левый верхний*/
+div.lt {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 150px;
+}
+
+/*левый нижний*/
+div.lb {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+}
+
+/*правый верхний*/
+div.rt {
+	position: fixed;
+	right: 0;
+	top: 0;
+}
+
+/*правый нижний*/
+div.rb {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+}
+
+div.center {
+	margin: 0 auto;
+}
