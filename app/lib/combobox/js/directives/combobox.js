@@ -90,12 +90,57 @@
 					return findedItems;
 				}
 
+				function selectItem(selectedItem) {
+					changeIsShowPopup(false);
+					$scope.model = selectedItem;
+					upAndDownListener.clearSelected();
+					$scope.searchText = '';
+					$scope.search();
+					if (angular.isFunction($scope.onItemSelected)){
+						$scope.onItemSelected(selectedItem);
+					}
+				}
+
+				function changeIsShowPopup (newValue) {
+					$scope.isShowPopup = newValue;
+					if ($scope.isShowPopup){
+						configurePopup();
+	                    upAndDownListener.set(selectItem);
+					} else {
+						upAndDownListener.remove();
+					}					
+				}
+
+				function configurePopup() {
+					var deltaHeight =  $(window).height() - element.offset().top - element.height(),
+						innerHeight = listContainer.outerHeight(),
+                    	infoCssSettings = {},
+                    	getOffset = function () {
+                    		return element.outerHeight() + 5;
+                    	};
+
+                    if (deltaHeight < innerHeight){
+                        listContainer.addClass('top');
+                        infoCssSettings = {
+                            bottom: getOffset(),
+                            top: 'auto',
+                        };
+                    } else {
+                        infoCssSettings = {
+                            top: getOffset(),
+                            bottom: 'auto',
+                        };
+                    }
+
+                    listContainer.css(infoCssSettings);
+				}
+
 				$scope.isNeedShowNoResultText = function () {
 					return $scope.searchText && filtredList.length === 0;
 				}
 
 				$scope.isNeedShowListEmptyText = function () {
-					return isListNeedToLoad() == false && list.length === 0;
+					return (isListNeedToLoad() == false) && (list && list.length) === 0;
 				}
 
 				$scope.search = function  () {
@@ -114,37 +159,13 @@
 					if (isListNeedToLoad()){
 						loadItemsFromPromise();
 					}
-					$scope.isShowPopup = !$scope.isShowPopup;
-					if ($scope.isShowPopup){
-						var deltaHeight =  $(window).height() - element.offset().top - element.height(),
-							innerHeight = listContainer.outerHeight(),
-	                    	infoCssSettings = {};
-
-	                    if (deltaHeight < innerHeight){
-	                        listContainer.addClass('top');
-	                        infoCssSettings = {
-	                            bottom: getOffset(),
-	                            top: 'auto',
-	                        };
-	                    } else {
-	                        infoCssSettings = {
-	                            top: getOffset(),
-	                            bottom: 'auto',
-	                        };
-	                    }
-
-	                    listContainer.css(infoCssSettings);
-					}
-
-					function getOffset() {
-						return element.outerHeight() + 5;
-					};					
+					changeIsShowPopup(!$scope.isShowPopup);				
 				};
 
 				// закрытие попапа при клике вне попапа
 				var popupCloseListener = {
-					listenersUniqId: Math.floor(Math.random()*1000000).toString(),
-					add: function  (callback) {
+					listenersUniqId: getRandomString(),
+					set: function  (callback) {
 						$('html').on('click.' + this.listenersUniqId, function (event) {
 							var parentsMenuDown = $(event.target).parents(".menu_down");
 							if (parentsMenuDown[0] !== element[0]){
@@ -161,10 +182,10 @@
 				// выбор элемента. реализованно через события jQuery чтобы снизить нагрузку по памяти
 				// так как ангуляровский ng-click создаст listener на каждый вариант, а здесь только 1
 				var itemSelectListener = {
-					add: function  (callback) {
+					set: function  (onSelect) {
 						$(element).on('click', 'li>a', function (event) {
 							var selectedItem = $(this).data('item');
-							callback(selectedItem);
+							onSelect(selectedItem);
 							$scope.$apply();
 						})
 					},
@@ -173,25 +194,97 @@
 					}
 				};				
 
-				popupCloseListener.add(function  () {
-					$scope.isShowPopup = false;
+				var upAndDownListener = {
+					UP_KEY_CODE: 38,
+					DOWN_KEY_CODE: 40,
+					ENTER_KEY_CODE: 13,
+					selectedClass: 'selected',
+					listenersUniqId: getRandomString(),
+					$ul: listContainer.find('ul'),
+
+					clearSelected: function () {
+						listContainer.find('li.' + upAndDownListener.selectedClass).removeClass(upAndDownListener.selectedClass);
+						upAndDownListener.$ul.scrollTop(0);
+					},
+
+					set: function  (onSelect) {
+						$('html').on('keydown.' + this.listenersUniqId, function (event) {
+
+		                    var up = event.keyCode == upAndDownListener.UP_KEY_CODE,
+		                    	down = event.keyCode == upAndDownListener.DOWN_KEY_CODE,
+		                    	enter = event.keyCode == upAndDownListener.ENTER_KEY_CODE,
+		                    	selectedElement, // текущий выбранный
+		                    	oldSelectedElement,
+		                    	items,
+		                    	selectedItemIndex;
+
+		                    if (!(up || down || enter)){
+		                    	return;
+		                    }
+		                    selectedElement = listContainer.find('li.' + upAndDownListener.selectedClass); 
+
+		                    if (enter) { // если нажали на ентер, производим выбор элемента
+		                        if (selectedElement.length > 0) {
+		                        	var selectedItem = selectedElement.children().data('item');
+		                            onSelect(selectedItem)
+		                            $scope.$apply();
+		                        }
+		                        return;
+		                    }
+		                    items = $('li', listContainer);
+							oldSelectedElement = selectedElement;
+
+
+		                    if (up) {
+		                        if (selectedElement.length == 0){
+		                            selectedElement = items.filter(":visible:last");
+		                        }
+		                        else {
+		                            selectedElement = selectedElement.prevAll(":visible").eq(0);
+		                            if (selectedElement.length == 0){
+		                                selectedElement = items.filter(":visible:last");
+		                            }
+		                        }
+		                    }
+		                    if (down) {
+		                        if (selectedElement.length == 0){
+		                            selectedElement = items.filter(":visible").eq(0);
+		                        }
+		                        else {
+		                            selectedElement = selectedElement.nextAll(":visible").eq(0);
+		                            if (selectedElement.length == 0){
+		                                selectedElement = items.filter(":visible").eq(0);
+		                            }
+		                        }
+		                    }
+
+		                    selectedElement.addClass(upAndDownListener.selectedClass);
+		                    oldSelectedElement.removeClass(upAndDownListener.selectedClass);
+		                    selectedItemIndex = selectedElement.index(); // номер по счету
+		                    upAndDownListener.$ul.scrollTop(itemHeight*selectedItemIndex);
+						});
+					},
+					remove: function () {
+						$('html').off('keydown.' + this.listenersUniqId);
+					}
+				};
+
+				popupCloseListener.set(function  () {
+					changeIsShowPopup(false);
 				});
 
-				itemSelectListener.add(function (selectedItem) {
-					$scope.isShowPopup = false;
-					$scope.model = selectedItem;
-					$scope.searchText = '';
-					$scope.search();
-					if (angular.isFunction($scope.onItemSelected)){
-						$scope.onItemSelected(selectedItem);
-					}
-				});
+				itemSelectListener.set(selectItem);
 
 				$scope.$on('$destroy', function  () {
 					popupCloseListener.remove();
 					itemSelectListener.remove();
+					upAndDownListener.remove();
 				});
 			}
 		};
+	}
+
+	function getRandomString() {
+		return Math.floor(Math.random()*1000000).toString();
 	}
 })(angular.module('combobox'));

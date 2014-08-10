@@ -117,7 +117,7 @@ div.menu_down li>a {
 	line-height: 13px;
 }
 
-div.menu_down li>a:hover {
+div.menu_down li>a:hover, div.menu_down li.selected a{
 	color: #fff;
 	background-color: #149fe9;
 }
