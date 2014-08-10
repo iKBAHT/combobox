@@ -8,9 +8,13 @@
 	</head>
 	<body ng-app="testApp" ng-cloak>
 		<div ng-controller="exampleController">
-			<combobox></combobox>	
+			<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
+			</combobox>	
+			<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
+			</combobox>	
 		</div>
 		
+		<script src="bower_components/jquery/dist/jquery.js"></script>
 		<script src="bower_components/angular/angular.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/controllers/exampleController.js"></script>

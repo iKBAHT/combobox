@@ -1,1 +1,10 @@
-<h1>ass2 + {{combobox}}</h1>
+<div class="menu_down">
+	<a ng-click="openPopup()">{{getCurrentItem()}}</a>
+	<div ng-show="isShow">
+		<ul>
+			<li ng-repeat="item in getSource()">
+				<a data-item="{{item}}">{{item.value}}</a>
+			</li>
+		</ul>	
+	</div>
+</div>

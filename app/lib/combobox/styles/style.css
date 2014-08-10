@@ -1,0 +1,75 @@
+div.menu_down {
+	max-width: 100%;
+	position: relative;
+	display: inline-block;
+}
+
+div.menu_down>a {
+	max-width: 100%;
+	overflow: hidden;
+	color: #253035;
+	display: inline-block;
+	position: relative;
+	border-bottom: 1px dotted #253035;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+div.menu_down a {
+	cursor: pointer;
+}
+
+div.menu_down>div {
+	top: 32px;
+	bottom: auto;
+	max-width: 220px;
+
+	/*top: 0;*/
+	left: 0;
+	/*display: none;*/
+	position: absolute;
+	z-index: 999;
+	min-width: 100px;
+	/*max-width: 400px;*/
+	border-radius: 2px;
+	background: #fff;
+	border: none;
+	box-shadow: 0 2px 25px rgba(0,15,20,.15),0 0 1px 1px rgba(0,0,0,.15);
+}
+
+div.menu_down ul {
+	max-height: 600px;
+	overflow-y: auto;
+
+	text-align: left;
+	overflow: hidden;
+	position: relative;
+	list-style: none;
+	padding: 5px 0;
+	margin: 0;
+}
+
+div.menu_down ul>li {
+	padding: 0;
+}
+
+div.menu_down li>a {
+	/*padding-right: 15px;*/
+	padding: 8px 10px;
+	font-weight: 400;
+	display: block;
+	white-space: nowrap;
+	text-shadow: none;
+	text-decoration: none!important;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: #506065;
+	transition: .1s;
+	line-height: 13px;
+}
+
+div.menu_down li>a:hover {
+	color: #fff;
+	background-color: #149fe9;
+}
