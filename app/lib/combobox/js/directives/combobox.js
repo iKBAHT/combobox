@@ -2,8 +2,8 @@
 (function (module, $) {
 	module.directive('combobox', comboboxDirective);
 
-	comboboxDirective.inject = [];
-	function comboboxDirective() {
+	comboboxDirective.inject = ['ComboboxList'];
+	function comboboxDirective(ComboboxList) {
 		return {
 			restrict: 'EA',
 			replace: true,
@@ -21,38 +21,33 @@
 					emptyText: 'Нет', // показывается когда не задан текущий выбранный элемент
 					noResultText: 'Не найдено', // показывается когда поиск не дал результата
 					listEmptyText: 'Список пуст', // показывается когда нет списка вариантов
+					loadProcessText: 'Загрузка', // текст для отображения во время загрузки
 					defaultSearchText: 'Поиск',
 					needSearch: true,  // показывать ли окно поиска. если false, то не показывать никогда, если true, то в зависимости от countToShowSearch
 					countToShowSearch: 4, // после какого количества элементов надо показывать поиск
 					itemsToShow: 6 // сколько элементов влезает до появления скролла
 				}, $scope.options || {});
 
-				var list, // полный список вариантов
-					filtredList, // список вариантов, удовлетворяющих текущему поиску
-					listStartLoad = false,
-					listContainer = element.children('div'),
-					itemHeight = 29;				
+				var	listContainer = element.children('div'),
+						itemHeight = 29,
+						comboboxList = new ComboboxList(options.lazyLoad);				
 
 				function init () {
 					$scope.isShowPopup = false;
 					$scope.isShowSearch = false;
 					$scope.noResultText = options.noResultText;
+					$scope.loadProcessText = options.loadProcessText;
 					$scope.listEmptyText = options.listEmptyText;
 					$scope.placeholderText = options.defaultSearchText;
 
 					setMaxVisibleItems(options.itemsToShow);
 
-					if (angular.isArray($scope.source)){
-						// в качестве источника массив
-						setSource($scope.source);
-					} else if (angular.isFunction($scope.source)) {
-						// в качестве источника promise
-						if (!options.lazyLoad){
-							loadItemsFromPromise();
-						}
-					} else {
-						throw new TypeError('combobox source must be array or promise function');
-					}
+					comboboxList.whenSourceSet(function () {
+						if (options.needSearch && (comboboxList.getTotalLength() > options.countToShowSearch)){
+			        $scope.isShowSearch = true;
+			      }
+					});				
+					comboboxList.setDataSource($scope.source);	
 
 					popupCloseListener.set(function () {
 						changeIsShowPopup(false);
@@ -67,47 +62,12 @@
 					});
 				}
 
-				function loadItemsFromPromise () {
-					listStartLoad = true;
-					$scope.source().then(function (items) {
-						if (!angular.isArray(items)){
-							throw new TypeError('combobox source promise function must return array');
-						}
-						setSource(items);
-						listStartLoad = false;
-					});
-				}
-
-				function isListNeedToLoad() {
-					return !(list || listStartLoad);
-				}
-
-				function setSource (items) {
-					filtredList = list = items;
-					if (options.needSearch && (list.length > options.countToShowSearch)){
-						$scope.isShowSearch = true;
-					}
-				}
-
-				function findItemsByText (text) {
-					var findedItems = [];
-					if (!text) {
-						return list;
-					}
-					for(var i=0, length=list.length;i<length;++i){
-						if (list[i].value.indexOf(text) !== -1){
-							findedItems[findedItems.length] = list[i];
-						}
-					}
-					return findedItems;
-				}
-
 				function selectItem (selectedItem) {
 					changeIsShowPopup(false);
 					$scope.model = selectedItem;
 					upAndDownListener.clearSelected();
 					$scope.searchText = '';
-					$scope.search();
+					comboboxList.clearSearch();
 					if (angular.isFunction($scope.onItemSelected)){
 						$scope.onItemSelected(selectedItem);
 					}
@@ -117,34 +77,36 @@
 					$scope.isShowPopup = newValue;
 					if ($scope.isShowPopup){
 						configurePopup();
-	                    upAndDownListener.set(selectItem);
+	          upAndDownListener.set(selectItem);
 					} else {
 						upAndDownListener.remove();
 					}					
 				}
 
+				// расчитать в какое место отобразить попап
 				function configurePopup() {
 					var deltaHeight =  $(window).height() - element.offset().top - element.height(),
 						innerHeight = listContainer.outerHeight(),
-                    	infoCssSettings = {},
-                    	getOffset = function () {
-                    		return element.outerHeight() + 5;
-                    	};
+          	infoCssSettings = {},
+          	getOffset = function () {
+          		return element.outerHeight() + 5;
+          	};
 
-                    if (deltaHeight < innerHeight){
-                        listContainer.addClass('top');
-                        infoCssSettings = {
-                            bottom: getOffset(),
-                            top: 'auto',
-                        };
-                    } else {
-                        infoCssSettings = {
-                            top: getOffset(),
-                            bottom: 'auto',
-                        };
-                    }
+          if (deltaHeight < innerHeight){
+              listContainer.addClass('top');
+              infoCssSettings = {
+                bottom: getOffset(),
+                top: 'auto',
+              };
+          } else {
+          	listContainer.removeClass('top');
+              infoCssSettings = {
+                top: getOffset(),
+                bottom: 'auto',
+              };
+          }
 
-                    listContainer.css(infoCssSettings);
+          listContainer.css(infoCssSettings);
 				}
 
 				function setMaxVisibleItems (count) {
@@ -153,32 +115,36 @@
 					});
 				}
 
-				$scope.isNeedShowNoResultText = function () {
-					return $scope.searchText && filtredList.length === 0;
-				};
-
-				$scope.isNeedShowListEmptyText = function () {
-					return (isListNeedToLoad() === false) && (list && list.length) === 0;
+				$scope.openPopup = function () {
+					comboboxList.prepare();
+					changeIsShowPopup(!$scope.isShowPopup);
 				};
 
 				$scope.search = function () {
-					filtredList = findItemsByText($scope.searchText);
-				};
-				
+					comboboxList.search($scope.searchText);
+		    };
+
+		    $scope.getSource = function () {
+		      return comboboxList.getFiltredList();
+		    };
+		    
 				$scope.getCurrentItem = function () {
 					return $scope.model && $scope.model.value || options.emptyText;
 				};
 
-				$scope.getSource = function () {
-					return filtredList || [];
-				};
+		    $scope.isNeedShowNoResultText = function () {
+		      return $scope.searchText && comboboxList.getFiltredListLength() === 0;
+		    };
 
-				$scope.openPopup = function () {
-					if (isListNeedToLoad()){
-						loadItemsFromPromise();
-					}
-					changeIsShowPopup(!$scope.isShowPopup);
-				};
+		    $scope.isNeedShowListEmptyText = function () {
+		      return comboboxList.isListReady() && comboboxList.getTotalLength() === 0;
+		    };
+
+		    $scope.isNeedShowLoadProcessText = function () {
+		      return comboboxList.isLoadProcess();
+		    };	    
+
+
 
 				// закрытие попапа при клике вне попапа
 				var popupCloseListener = {
@@ -235,48 +201,48 @@
 								items,
 								selectedItemIndex;
 
-	            if (!(up || down || enter)){
+							if (!(up || down || enter)){
 								return;
-	            }
-	            selectedElement = listContainer.find('li.' + upAndDownListener.selectedClass); 
+							}
+							selectedElement = listContainer.find('li.' + upAndDownListener.selectedClass); 
 
-	            if (enter) { // если нажали на ентер, производим выбор элемента
-	                if (selectedElement.length > 0) {
+							if (enter) { // если нажали на ентер, производим выбор элемента
+							    if (selectedElement.length > 0) {
 										var selectedItem = selectedElement.children().data('item');
 										onSelect(selectedItem);
 										$scope.$apply();
-	                }
-	                return;
-	            }
+							    }
+							    return;
+							}
 							items = $('li', listContainer);
 							oldSelectedElement = selectedElement;
 
-	            if (up) {
-	                if (selectedElement.length === 0){
-	                    selectedElement = items.filter(':visible:last');
-	                }
-	                else {
-	                    selectedElement = selectedElement.prevAll(':visible').eq(0);
-	                    if (selectedElement.length === 0){
-	                        selectedElement = items.filter(':visible:last');
-	                    }
-	                }
-	            } else if (down) {
-	                if (selectedElement.length === 0){
-	                    selectedElement = items.filter(':visible').eq(0);
-	                }
-	                else {
-	                    selectedElement = selectedElement.nextAll(':visible').eq(0);
-	                    if (selectedElement.length === 0){
-	                        selectedElement = items.filter(':visible').eq(0);
-	                    }
-	                }
-	            }
+							if (up) {
+						    if (selectedElement.length === 0){
+						      selectedElement = items.filter(':visible:last');
+						    }
+						    else {
+					        selectedElement = selectedElement.prevAll(':visible').eq(0);
+					        if (selectedElement.length === 0){
+					          selectedElement = items.filter(':visible:last');
+					        }
+						    }
+							} else if (down) {
+						    if (selectedElement.length === 0){
+					        selectedElement = items.filter(':visible').eq(0);
+						    }
+						    else {
+					        selectedElement = selectedElement.nextAll(':visible').eq(0);
+					        if (selectedElement.length === 0){
+									  selectedElement = items.filter(':visible').eq(0);
+					        }
+						    }
+							}
 
-	            selectedElement.addClass(upAndDownListener.selectedClass);
-	            oldSelectedElement.removeClass(upAndDownListener.selectedClass);
-	            selectedItemIndex = selectedElement.index(); // номер по счету
-	            upAndDownListener.$ul.scrollTop(itemHeight*selectedItemIndex);
+							selectedElement.addClass(upAndDownListener.selectedClass);
+							oldSelectedElement.removeClass(upAndDownListener.selectedClass);
+							selectedItemIndex = selectedElement.index(); // номер по счету
+							upAndDownListener.$ul.scrollTop(itemHeight*selectedItemIndex);
 						});
 					},
 					remove: function () {

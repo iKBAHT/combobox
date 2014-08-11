@@ -142,7 +142,7 @@
 
 		$scope.simpleCombobox = createSimpleComboboxOptions();
 		$scope.emptyCombobox = createEmptyComboboxOptions();
-		$scope.remoteCombobox = createRemoteComboboxOptions(150); // задержка, эмуляция ожидания сервера
+		$scope.remoteCombobox = createRemoteComboboxOptions(1000); // задержка, эмуляция ожидания сервера
 		$scope.disableCombobox = createDisableComboboxOptions();
 		$scope.bigCombobox = createBigComboboxOptions(500); // количество элементов в списке
 	}
