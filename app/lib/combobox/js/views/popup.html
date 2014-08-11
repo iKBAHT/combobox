@@ -1,0 +1,13 @@
+<div ng-class="{'hide': !isShowPopup}">
+	<div class="arrow"></div>
+	<div class="search" ng-show="isShowSearch">
+		<input ng-model="searchText" ng-change="search()" type="text" placeholder="{{placeholderText}}">
+	</div>
+	<ul>
+		<li ng-repeat="item in getSource()">
+			<a data-item="{{item}}">{{item.value}}</a>
+		</li>
+		<span ng-show="isNeedShowNoResultText()">{{noResultText}}</span>
+		<span ng-show="isNeedShowListEmptyText()">{{listEmptyText}}</span>
+	</ul>	
+</div>

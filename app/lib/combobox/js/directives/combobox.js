@@ -1,9 +1,9 @@
 'use strict';
 (function (module, $) {
-	module.directive('combobox', exampleController);
+	module.directive('combobox', comboboxDirective);
 
-	exampleController.inject = [];
-	function exampleController() {
+	comboboxDirective.inject = [];
+	function comboboxDirective() {
 		return {
 			restrict: 'EA',
 			replace: true,
