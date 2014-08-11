@@ -86,5 +86,5 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('check', 'newer:jshint');
+  grunt.registerTask('check', 'jshint');
 };

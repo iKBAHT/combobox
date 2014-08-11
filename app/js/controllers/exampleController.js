@@ -28,7 +28,7 @@
 				}
 			};
 			return combobox;
-		};
+		}
 
 		function createEmptyComboboxOptions () {
 			var selectList = [];
@@ -37,10 +37,10 @@
 					id: '123',
 					value: 'Иванов Иван'
 				},
-				list: selectList				
+				list: selectList
 			};
 			return combobox;
-		};
+		}
 
 		function createRemoteComboboxOptions () {
 			var selectList = [{
@@ -66,7 +66,7 @@
 					}, 200);
 				},
 				options: {
-					emptyText: "пока не выбранно",
+					emptyText: 'пока не выбранно',
 					lazyLoad: true
 				},
 				onSelect: function (newItem) {
@@ -74,7 +74,7 @@
 				}
 			};
 			return combobox;
-		};
+		}
 
 		function createDisableComboboxOptions () {
 			
@@ -90,7 +90,7 @@
 				//combobox.disable = false;
 			}, 2000);
 			return combobox;
-		};
+		}
 
 		function createBigComboboxOptions (size) {
 			var selectList = [],
@@ -105,7 +105,7 @@
 				return {
 					value: generateWord(),
 					id: generateItem.count++
-				}
+				};
 			}
 
 			function generateWord() {
@@ -115,7 +115,7 @@
 				for (var j=0;j<wordLength;++j){
 					word += charSet.charAt(Math.floor(Math.random()*26));
 				}
-				return word;
+				  return word;
 			}
 			var combobox = {
 				selected: selectList[0],
@@ -125,7 +125,7 @@
 				}
 			};
 			return combobox;
-		}; 
+		}
 		
 		$scope.simpleCombobox = createSimpleComboboxOptions();
 		$scope.emptyCombobox = createEmptyComboboxOptions();
