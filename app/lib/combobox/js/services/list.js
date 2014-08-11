@@ -24,7 +24,7 @@
       this.filtredList = []; // список вариантов, удовлетворяющих текущему поиску
       this.source = null; // источник данных. массив либо promise
       this.listInited = false; // загруженны ли данные в list
-      this.listLoadStarted = false;
+      this.listLoadStarted = false; // началась ли загрузка если источник это promise
       this.lazyLoad = lazyLoad; // ленивая загрузка
     }
 
@@ -55,6 +55,7 @@
       this.sourceInitCallback = callback;
     };
 
+    // если источником данных был promise
     List.prototype.loadItemsFromPromise = function () {
       var that = this;
       that.listLoadStarted = true;
@@ -67,6 +68,7 @@
       });
     };
 
+    // загрузить данные если из еще нет из за lazyLoad
     List.prototype.prepare = function () {
       if (this.isListNeedToLoad()){
         this.loadItemsFromPromise();

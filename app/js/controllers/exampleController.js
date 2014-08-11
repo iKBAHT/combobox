@@ -104,7 +104,7 @@
 
 		function createBigComboboxOptions (size) {
 			var selectList = [],
-				wordLength = 8;
+				wordLength = 6;
 
 			for (var i=0;i<size;++i){
 				selectList.push(generateItem());

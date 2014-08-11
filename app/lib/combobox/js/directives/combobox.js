@@ -17,31 +17,58 @@
 			},
 			link: function ($scope, element) {
 				var options = angular.extend({
-					lazyLoad: false,
+					lazyLoad: false, // true - загрузить данные когда придет время отобразить попап
 					emptyText: 'Нет', // показывается когда не задан текущий выбранный элемент
 					noResultText: 'Не найдено', // показывается когда поиск не дал результата
 					listEmptyText: 'Список пуст', // показывается когда нет списка вариантов
 					loadProcessText: 'Загрузка', // текст для отображения во время загрузки
-					defaultSearchText: 'Поиск',
+					defaultSearchText: 'Поиск', // текст для плейсхолдера поиска
 					needSearch: true,  // показывать ли окно поиска. если false, то не показывать никогда, если true, то в зависимости от countToShowSearch
 					countToShowSearch: 4, // после какого количества элементов надо показывать поиск
 					itemsToShow: 6 // сколько элементов влезает до появления скролла
 				}, $scope.options || {});
 
 				var	listContainer = element.children('div'),
-						itemHeight = 29,
-						comboboxList = new ComboboxList(options.lazyLoad);				
+						itemHeight = 29, // высота одного элмента списка
+						comboboxList = new ComboboxList(options.lazyLoad);  // класс для работы с данными	
+
+				$scope.isShowPopup = false;
+				$scope.isShowSearch = false;
+				$scope.noResultText = options.noResultText;
+				$scope.loadProcessText = options.loadProcessText;
+				$scope.listEmptyText = options.listEmptyText;
+				$scope.placeholderText = options.defaultSearchText;
+
+				$scope.getCurrentItem = function () {
+					return $scope.model && $scope.model.value || options.emptyText;
+				};
+
+				$scope.openPopup = function () {
+					comboboxList.prepare();
+					changeIsShowPopup(!$scope.isShowPopup);
+				};
+
+				$scope.search = function () {
+					comboboxList.search($scope.searchText);
+		    };
+
+		    $scope.getSource = function () {
+		      return comboboxList.getFiltredList();
+		    };		    
+
+		    $scope.isNeedShowNoResultText = function () {
+		      return $scope.searchText && comboboxList.getFiltredListLength() === 0;
+		    };
+
+		    $scope.isNeedShowListEmptyText = function () {
+		      return comboboxList.isListReady() && comboboxList.getTotalLength() === 0;
+		    };
+
+		    $scope.isNeedShowLoadProcessText = function () {
+		      return comboboxList.isLoadProcess();
+		    };	    
 
 				function init () {
-					$scope.isShowPopup = false;
-					$scope.isShowSearch = false;
-					$scope.noResultText = options.noResultText;
-					$scope.loadProcessText = options.loadProcessText;
-					$scope.listEmptyText = options.listEmptyText;
-					$scope.placeholderText = options.defaultSearchText;
-
-					setMaxVisibleItems(options.itemsToShow);
-
 					comboboxList.whenSourceSet(function () {
 						if (options.needSearch && (comboboxList.getTotalLength() > options.countToShowSearch)){
 			        $scope.isShowSearch = true;
@@ -49,12 +76,13 @@
 					});				
 					comboboxList.setDataSource($scope.source);	
 
+					itemSelectListener.set(selectItem);
 					popupCloseListener.set(function () {
 						changeIsShowPopup(false);
 					});
+					setMaxVisibleItems(options.itemsToShow);
 
-					itemSelectListener.set(selectItem);
-
+					// отписаться от всех событий когда элемент будет удален
 					$scope.$on('$destroy', function () {
 						popupCloseListener.remove();
 						itemSelectListener.remove();
@@ -62,6 +90,7 @@
 					});
 				}
 
+				// выбрать вариант
 				function selectItem (selectedItem) {
 					changeIsShowPopup(false);
 					$scope.model = selectedItem;
@@ -73,6 +102,7 @@
 					}
 				}
 
+				// изменить видимость попапа
 				function changeIsShowPopup (newValue) {
 					$scope.isShowPopup = newValue;
 					if ($scope.isShowPopup){
@@ -115,41 +145,11 @@
 					});
 				}
 
-				$scope.openPopup = function () {
-					comboboxList.prepare();
-					changeIsShowPopup(!$scope.isShowPopup);
-				};
-
-				$scope.search = function () {
-					comboboxList.search($scope.searchText);
-		    };
-
-		    $scope.getSource = function () {
-		      return comboboxList.getFiltredList();
-		    };
-		    
-				$scope.getCurrentItem = function () {
-					return $scope.model && $scope.model.value || options.emptyText;
-				};
-
-		    $scope.isNeedShowNoResultText = function () {
-		      return $scope.searchText && comboboxList.getFiltredListLength() === 0;
-		    };
-
-		    $scope.isNeedShowListEmptyText = function () {
-		      return comboboxList.isListReady() && comboboxList.getTotalLength() === 0;
-		    };
-
-		    $scope.isNeedShowLoadProcessText = function () {
-		      return comboboxList.isLoadProcess();
-		    };	    
-
-
-
 				// закрытие попапа при клике вне попапа
 				var popupCloseListener = {
 					listenersUniqId: getRandomString(),
 					set: function (callback) {
+						// создаем listener с уникальным неймспейсом чтобы при отписке не удалить чужие лисенеры
 						$('html').on('click.' + this.listenersUniqId, function (event) {
 							var parentsMenuDown = $(event.target).parents('.menu_down');
 							if (parentsMenuDown[0] !== element[0]){
@@ -163,7 +163,7 @@
 					}
 				};
 
-				// выбор элемента. реализованно через события jQuery чтобы снизить нагрузку по памяти
+				// выбор элемента при клике по списку. реализованно через события jQuery чтобы снизить нагрузку по памяти
 				// так как ангуляровский ng-click создаст listener на каждый вариант, а здесь только 1
 				var itemSelectListener = {
 					set: function (onSelect) {
@@ -178,6 +178,7 @@
 					}
 				};
 
+				// выбор элементов при потомщи стрелок вверх, вниз и enter
 				var upAndDownListener = {
 					UP_KEY_CODE: 38,
 					DOWN_KEY_CODE: 40,
@@ -192,11 +193,12 @@
 					},
 
 					set: function (onSelect) {
+						// создаем listener с уникальным неймспейсом чтобы при отписке не удалить чужие лисенеры
 						$('html').on('keydown.' + this.listenersUniqId, function (event) {
 							var up = event.keyCode === upAndDownListener.UP_KEY_CODE,
 								down = event.keyCode === upAndDownListener.DOWN_KEY_CODE,
 								enter = event.keyCode === upAndDownListener.ENTER_KEY_CODE,
-								selectedElement, // текущий выбранный
+								selectedElement,
 								oldSelectedElement,
 								items,
 								selectedItemIndex;
@@ -206,13 +208,14 @@
 							}
 							selectedElement = listContainer.find('li.' + upAndDownListener.selectedClass); 
 
-							if (enter) { // если нажали на ентер, производим выбор элемента
-							    if (selectedElement.length > 0) {
-										var selectedItem = selectedElement.children().data('item');
-										onSelect(selectedItem);
-										$scope.$apply();
-							    }
-							    return;
+							if (enter) { 
+								// если нажали на ентер, производим выбор элемента
+						    if (selectedElement.length > 0) {
+									var selectedItem = selectedElement.children().data('item');
+									onSelect(selectedItem);
+									$scope.$apply();
+						    }
+						    return;
 							}
 							items = $('li', listContainer);
 							oldSelectedElement = selectedElement;
