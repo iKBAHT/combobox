@@ -11,8 +11,9 @@
       if (!text) {
         return list;
       }
+      text = text.toLowerCase();
       for(var i=0, length=list.length;i<length;++i){
-        if (list[i].value.indexOf(text) !== -1){
+        if (list[i].value.toLowerCase().indexOf(text) !== -1){
           findedItems[findedItems.length] = list[i];
         }
       }

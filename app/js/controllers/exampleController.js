@@ -5,6 +5,31 @@
 	exampleController.inject = ['$scope', '$q', '$timeout'];
 	function exampleController($scope, $q, $timeout) {
 
+		function createSityComboboxOptions() {
+			var i = 0,
+				sitys;
+
+			sitys = [{
+				value: 'Москва',
+				id: i++
+			}, {
+				value: 'Самара',
+				id: i++
+			}, {
+				value: 'Ростов',
+				id: i++
+			}, {
+				value: 'Пенза',
+				id: i++
+			}, {
+				value: 'Омск',
+				id: i++
+			}];
+
+			return {
+				list: sitys
+			};
+		}
 		function createSimpleComboboxOptions () {
 			var selectList = [{
 				value: 'apple',
@@ -145,5 +170,7 @@
 		$scope.remoteCombobox = createRemoteComboboxOptions(1000); // задержка, эмуляция ожидания сервера
 		$scope.disableCombobox = createDisableComboboxOptions();
 		$scope.bigCombobox = createBigComboboxOptions(500); // количество элементов в списке
+
+		$scope.sityCombobox = createSityComboboxOptions();
 	}
 })(angular.module('testApp'));
