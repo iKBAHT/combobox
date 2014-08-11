@@ -42,7 +42,7 @@
 			return combobox;
 		}
 
-		function createRemoteComboboxOptions () {
+		function createRemoteComboboxOptions (delay) {
 			var selectList = [{
 				value: 'стол',
 				id: 1
@@ -63,10 +63,10 @@
 				list: function  () {
 					return $timeout(function  () {
 						return $q.when(selectList);
-					}, 200);
+					}, delay);
 				},
 				options: {
-					emptyText: 'пока не выбранно',
+					emptyText: 'выбрать',
 					lazyLoad: true
 				},
 				onSelect: function (newItem) {
@@ -77,18 +77,28 @@
 		}
 
 		function createDisableComboboxOptions () {
-			
+			var selectList = [{
+				value: 'стол',
+				id: 1
+			}, {
+				value: 'стул',
+				id: 2
+			}, {
+				value: 'тумбочка',
+				id: 3
+			}, {
+				value: 'шкаф',
+				id: 4
+			}, {
+				value: 'дверь',
+				id: 5
+			}];
+
 			var combobox = {
-				selected: {
-					id: '123',
-					value: 'disabled element'
-				},
-				list: [],
+				selected: selectList[selectList.length-1],
+				list: selectList,
 				disable: true
-			};
-			$timeout(function() {
-				//combobox.disable = false;
-			}, 2000);
+			};			
 			return combobox;
 		}
 
@@ -120,17 +130,20 @@
 			var combobox = {
 				selected: selectList[0],
 				list: selectList,
+				options: {
+					itemsToShow: 8
+				},
 				onSelect: function (newItem) {
 					console.log('new item is ' + newItem.id);
 				}
 			};
 			return combobox;
 		}
-		
+
 		$scope.simpleCombobox = createSimpleComboboxOptions();
 		$scope.emptyCombobox = createEmptyComboboxOptions();
-		$scope.remoteCombobox = createRemoteComboboxOptions();
+		$scope.remoteCombobox = createRemoteComboboxOptions(150); // задержка, эмуляция ожидания сервера
 		$scope.disableCombobox = createDisableComboboxOptions();
-		$scope.bigCombobox = createBigComboboxOptions(100);
+		$scope.bigCombobox = createBigComboboxOptions(500); // количество элементов в списке
 	}
 })(angular.module('testApp'));

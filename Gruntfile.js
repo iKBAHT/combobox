@@ -12,22 +12,7 @@ module.exports = function (grunt) {
 
     yeoman: appConfig,
 
-    watch: {
-      bower: {
-        files: ['bower.json'],
-        tasks: ['wiredep']
-      },
-      js: {
-        files: ['<%= yeoman.app %>/{,*/}*.js'],
-        tasks: ['newer:jshint:all'],
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        }
-      },
-      styles: {
-        files: ['<%= yeoman.app %>/{,*/}*.css'],
-        tasks: ['newer:copy:styles', 'autoprefixer']
-      },
+    watch: {      
       gruntfile: {
         files: ['Gruntfile.js']
       },

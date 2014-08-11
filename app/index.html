@@ -10,14 +10,36 @@
 	<body ng-app="testApp" ng-cloak>
 		<section ng-controller="exampleController">
 			<div class="center">
-				<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
-				</combobox>	
-				<combobox model="disableCombobox.selected" source="disableCombobox.list" options="disableCombobox.options" on-item-selected="disableCombobox.onSelect" disable="disableCombobox.disable">
-				</combobox>	
-				<combobox model="bigCombobox.selected" source="bigCombobox.list" options="bigCombobox.options" on-item-selected="bigCombobox.onSelect" disable="bigCombobox.disable">
-				</combobox>	
-				<combobox model="emptyCombobox.selected" source="emptyCombobox.list" options="emptyCombobox.options" on-item-selected="emptyCombobox.onSelect" disable="emptyCombobox.disable">
-				</combobox>	
+				<ul>
+					<li>
+						<div class="text">асинхронная загрузка списка</div>
+						<div class="combobox">
+							<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
+							</combobox>
+						</div>
+					</li>
+					<li>
+						<div class="text"><input ng-model="disableCombobox.disable" title="разблокировать" type="checkbox"/> заблокированный список</div>
+						<div class="combobox">
+							<combobox model="disableCombobox.selected" source="disableCombobox.list" options="disableCombobox.options" on-item-selected="disableCombobox.onSelect" disable="disableCombobox.disable">
+							</combobox>	
+						</div>
+					</li>
+					<li>
+						<div class="text">в списке 500 случайных элементов</div>
+						<div class="combobox">
+							<combobox model="bigCombobox.selected" source="bigCombobox.list" options="bigCombobox.options" on-item-selected="bigCombobox.onSelect" disable="bigCombobox.disable">
+							</combobox>	
+						</div>
+					</li>
+					<li>
+						<div class="text">пустой список</div>
+						<div class="combobox">
+							<combobox model="emptyCombobox.selected" source="emptyCombobox.list" options="emptyCombobox.options" on-item-selected="emptyCombobox.onSelect" disable="emptyCombobox.disable">
+							</combobox>	
+						</div>
+					</li>
+				</ul>
 			</div>
 			<div class="lt">
 				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">

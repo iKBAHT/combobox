@@ -19,8 +19,6 @@ div.menu_down>a {
 	white-space: nowrap;
 }
 
-
-
 div.menu_down>p{
 	overflow: hidden;
 	line-height: normal;
@@ -29,14 +27,10 @@ div.menu_down>p{
 
 div.menu_down>div {
 	max-width: 220px;
-
-	/*top: 0;*/
 	left: 0;
-	/*display: none;*/
 	position: absolute;
 	z-index: 999;
 	min-width: 100px;
-	/*max-width: 400px;*/
 	border-radius: 2px;
 	background: #fff;
 	border: none;
@@ -88,7 +82,7 @@ div.menu_down .search>input {
 	display: inline-block;
 	line-height: normal;
 	border-radius: 3px;
-	font-family: Arial,Tahoma;
+	font-family: Helvetica, Arial;
 	color: #253035;
 	padding: 0 6px;
 }
@@ -96,7 +90,6 @@ div.menu_down .search>input {
 div.menu_down ul {
 	max-height: 300px;
 	overflow-y: auto;
-
 	text-align: left;
 	overflow: auto;
 	position: relative;
@@ -115,12 +108,11 @@ div.menu_down li>a {
 	display: block;
 	white-space: nowrap;
 	text-shadow: none;
-	text-decoration: none!important;
+	text-decoration: none;
 	max-width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	color: #506065;
-	transition: .1s;
 	line-height: 13px;
 }
 
@@ -129,10 +121,9 @@ div.menu_down li>a:hover, div.menu_down li.selected a{
 	background-color: #149fe9;
 }
 
-
 div.menu_down ul>span {
 	padding: 8px 10px;
 	display: block;
 	color: #bbb;
-	font-size: 15px;
+	font-size: 14px;
 }

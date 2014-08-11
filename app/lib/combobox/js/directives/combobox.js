@@ -31,28 +31,40 @@
 					filtredList, // список вариантов, удовлетворяющих текущему поиску
 					listStartLoad = false,
 					listContainer = element.children('div'),
-					itemHeight = 29;
+					itemHeight = 29;				
 
-				listContainer.find('ul').css({
-					'max-height': options.itemsToShow*itemHeight + 'px'
-				});
+				function init () {
+					$scope.isShowPopup = false;
+					$scope.isShowSearch = false;
+					$scope.noResultText = options.noResultText;
+					$scope.listEmptyText = options.listEmptyText;
+					$scope.placeholderText = options.defaultSearchText;
 
-				$scope.isShowPopup = false;
-				$scope.isShowSearch = false;
-				$scope.noResultText = options.noResultText;
-				$scope.listEmptyText = options.listEmptyText;
-				$scope.placeholderText = options.defaultSearchText;
+					setMaxVisibleItems(options.itemsToShow);
 
-				if (angular.isArray($scope.source)){
-					// в качестве источника массив
-					setSource($scope.source);
-				} else if (angular.isFunction($scope.source)) {
-					// в качестве источника promise
-					if (!options.lazyLoad){
-						loadItemsFromPromise();
+					if (angular.isArray($scope.source)){
+						// в качестве источника массив
+						setSource($scope.source);
+					} else if (angular.isFunction($scope.source)) {
+						// в качестве источника promise
+						if (!options.lazyLoad){
+							loadItemsFromPromise();
+						}
+					} else {
+						throw new TypeError('combobox source must be array or promise function');
 					}
-				} else {
-					throw new TypeError('combobox source must be array or promise function');
+
+					popupCloseListener.set(function () {
+						changeIsShowPopup(false);
+					});
+
+					itemSelectListener.set(selectItem);
+
+					$scope.$on('$destroy', function () {
+						popupCloseListener.remove();
+						itemSelectListener.remove();
+						upAndDownListener.remove();
+					});
 				}
 
 				function loadItemsFromPromise () {
@@ -133,6 +145,12 @@
                     }
 
                     listContainer.css(infoCssSettings);
+				}
+
+				function setMaxVisibleItems (count) {
+					listContainer.find('ul').css({
+						'max-height': count*itemHeight + 'px'
+					});
 				}
 
 				$scope.isNeedShowNoResultText = function () {
@@ -264,19 +282,9 @@
 					remove: function () {
 						$('html').off('keydown.' + this.listenersUniqId);
 					}
-				};
+				};				
 
-				popupCloseListener.set(function () {
-					changeIsShowPopup(false);
-				});
-
-				itemSelectListener.set(selectItem);
-
-				$scope.$on('$destroy', function () {
-					popupCloseListener.remove();
-					itemSelectListener.remove();
-					upAndDownListener.remove();
-				});
+				init();
 			}
 		};
 	}

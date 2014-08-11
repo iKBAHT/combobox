@@ -1,4 +1,35 @@
-section>div {
+* {
+	outline:none;
+	font-family: Helvetica, Arial;
+}
+
+div.center {
+	margin: 100px auto;
+	width: 600px;
+}
+
+div.center ul li {
+	list-style: none;
+	clear: both;
+	padding-bottom: 15px;
+}
+
+div.center li>div{
+	position: inline-block;
+	float: left;
+}
+
+div.center .text {
+	min-width: 300px; 
+}
+
+
+
+div.center .combobox {
+	margin-left: 10px; 
+}
+
+.lt, .lb, .rt, .rb  {
 	margin: 10px;
 	width: 100px;
 }
@@ -32,6 +63,3 @@ div.rb {
 	bottom: 0;
 }
 
-div.center {
-	margin: 0 auto;
-}
