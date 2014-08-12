@@ -5,184 +5,155 @@
 		<title>Combobox</title>
 		<link rel="stylesheet" href="styles/base.css">
 		<link rel="stylesheet" href="lib/combobox/styles/style.css">
-		<style>[ng-cloak] { display: none; }</style>
-		<style>.container { margin: 20px; }</style>
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
 	</head>
 	<body ng-app="testApp" ng-cloak>
-		<!--<section ng-controller="exampleController">
-			<div class="center">
-				<ul>
-					<li>
-						<div class="text">асинхронная загрузка списка</div>
-						<div class="combobox">
-							<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
-							</combobox>
-						</div>
-					</li>
-					<li>
-						<div class="text"><input ng-model="disableCombobox.disable" title="разблокировать" type="checkbox"/> заблокированный список</div>
-						<div class="combobox">
-							<combobox model="disableCombobox.selected" source="disableCombobox.list" options="disableCombobox.options" on-item-selected="disableCombobox.onSelect" disable="disableCombobox.disable">
-							</combobox>	
-						</div>
-					</li>
-					<li>
-						<div class="text">в списке 500 случайных элементов</div>
-						<div class="combobox">
-							<combobox model="bigCombobox.selected" source="bigCombobox.list" options="bigCombobox.options" on-item-selected="bigCombobox.onSelect" disable="bigCombobox.disable">
-							</combobox>	
-						</div>
-					</li>
-					<li>
-						<div class="text">пустой список</div>
-						<div class="combobox">
-							<combobox model="emptyCombobox.selected" source="emptyCombobox.list" options="emptyCombobox.options" on-item-selected="emptyCombobox.onSelect" disable="emptyCombobox.disable">
-							</combobox>	
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div class="lt">
-				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
-				</combobox>	
-			</div>
-			<div class="lb">
-				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
-				</combobox>	
-			</div>
-			<div class="rt">
-				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
-				</combobox>	
-			</div>
-			<div class="rb">
-				<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
-				</combobox>	
-			</div>
-		</section>-->
-	<div class="container" ng-controller="exampleController">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-            	<h4>простой комбобокс для выбора города</h4>
-            	<table class="table">
-			        <thead>
-			            <tr>
-			                <th>ИНН</th>
-			                <th>Фамилия</th>
-			                <th>Имя</th>
-			                <th>Город</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			            <tr>
-			                <td>16545676532</td>
-			                <td>Петров</td>
-			                <td>Василий</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected1" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>34562322</td>
-			                <td>Сидоров</td>
-			                <td>Семен</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected2" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>4578665843</td>
-			                <td>Яковлев</td>
-			                <td>Михаил</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected3" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			        </tbody>
-			    </table>
-
-			    <h4>ниже продемонстрированна возможность использования единой модели для всех комбобоксов</h4>
-			    <h5>при изменении одного значения сразу же меняются и другие</h5>
-            	<table class="table">
-			        <thead>
-			            <tr>
-			                <th>ИНН</th>
-			                <th>Фамилия</th>
-			                <th>Имя</th>
-			                <th>Город</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			            <tr>
-			                <td>16545676532</td>
-			                <td>Петров</td>
-			                <td>Василий</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>34562322</td>
-			                <td>Сидоров</td>
-			                <td>Семен</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>4578665843</td>
-			                <td>Яковлев</td>
-			                <td>Михаил</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			        </tbody>
-			    </table>
+		<div class="container" ng-controller="exampleController">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+        	<h4>простой комбобокс для выбора города</h4>
+        	<table class="table">
+		        <thead>
+		            <tr>
+		                <th>ИНН</th>
+		                <th>Фамилия</th>
+		                <th>Имя</th>
+		                <th>Город</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+	            <tr>
+	                <td>16545676532</td>
+	                <td>Петров</td>
+	                <td>Василий</td>
+	                <td>
+	                	<combobox model="sityCombobox.selected1" source="sityCombobox.list"></combobox>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td>34562322</td>
+	                <td>Сидоров</td>
+	                <td>Семен</td>
+	                <td>
+	                	<combobox model="sityCombobox.selected2" source="sityCombobox.list"></combobox>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td>4578665843</td>
+	                <td>Яковлев</td>
+	                <td>Михаил</td>
+	                <td>
+	                	<combobox model="sityCombobox.selected3" source="sityCombobox.list"></combobox>
+	                </td>
+	            </tr>
+		        </tbody>
+		    	</table>	    
 
 			    <h4>далее множество комбобоксов с различными опциями</h4>
-            	<table class="table">
-			        <thead>
-			            <tr>
-			                <th>Описание фичи</th>
-			                <th>Combobox</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			            <tr>
-			                <td>Ленивая асинхронная загрузка списка - данные будут запрошенны только когда пользователь откроет сombobox</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>Ленивая асинхронная загрузка списка - данные будут запрошенны только когда пользователь откроет сombobox</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>Ленивая асинхронная загрузка списка - данные будут запрошенны только когда пользователь откроет сombobox</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			            <tr>
-			                <td>Ленивая асинхронная загрузка списка - данные будут запрошенны только когда пользователь откроет сombobox</td>
-			                <td>
-			                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
-			                </td>
-			            </tr>
-			        </tbody>
-			    </table>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
-    </div>
+	      	<table class="table">
+		        <thead>
+		            <tr>
+		                <th>Описание фичи</th>
+		                <th>Combobox</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		          <tr>
+		              <td>Ленивая асинхронная загрузка списка - данные будут запрошенны только когда пользователь откроет сombobox. Эмитация запроса на сервер, задержка 1 секунда</td>
+		              <td>
+		              	<combobox model="remoteCombobox.selected" source="remoteCombobox.list" options="remoteCombobox.options" on-item-selected="remoteCombobox.onSelect" disable="remoteCombobox.disable">
+										</combobox>
+		              </td>
+		          </tr>
+		          <tr>
+		              <td>Подписка на интерфейс комбобокса onItemSelected. Появится alert</td>
+		              <td>
+		              	<combobox model="simpleCombobox.selected" source="simpleCombobox.list" options="simpleCombobox.options" on-item-selected="simpleCombobox.onSelect" disable="simpleCombobox.disable">
+										</combobox>	
+		              </td>
+		          </tr>
+		          <tr>
+		              <td>Комбобокс без поиска</td>
+		              <td>
+		              	<combobox model="withoutSearchCombobox.selected" source="withoutSearchCombobox.list" options="withoutSearchCombobox.options">
+										</combobox>	
+		              </td>
+		          </tr>
+		          <tr>
+		              <td>Комбобокс с обязательным поиском</td>
+		              <td>
+		              	<combobox model="withSearchCombobox.selected" source="withSearchCombobox.list" options="withSearchCombobox.options">
+										</combobox>	
+		              </td>
+		          </tr>
+		          <tr>
+		              <td>Список без вариантов, но с установленным текущим значением</td>
+		              <td>
+		              	<combobox model="emptyCombobox.selected" source="emptyCombobox.list" options="emptyCombobox.options" on-item-selected="emptyCombobox.onSelect" disable="emptyCombobox.disable">
+										</combobox>
+		              </td>
+		          </tr>
+							<tr>
+		              <td>Замороженный комбобокс. Переключить <input ng-model="disableCombobox.disable" title="разблокировать" type="checkbox"/></td>
+		              <td>
+		              	<combobox model="disableCombobox.selected" source="disableCombobox.list" options="disableCombobox.options" on-item-selected="disableCombobox.onSelect" disable="disableCombobox.disable">
+										</combobox>	
+		              </td>
+		          </tr>		          
+		          <tr>
+		              <td>Большой список, 1000 элементов сгенерированных случайно, 8 видимых элементов</td>
+		              <td>
+		              	<combobox model="bigCombobox.selected" source="bigCombobox.list" options="bigCombobox.options" on-item-selected="bigCombobox.onSelect" disable="bigCombobox.disable">
+		              </td>
+		          </tr>            
+		      	</tbody>
+		  		</table>
 
-		
+	    		<h4>ниже продемонстрированна возможность использования единой модели для всех комбобоксов</h4>
+			    <h5>при изменении одного значения сразу же меняются и другие</h5>
+        	<table class="table">
+		        <thead>
+		            <tr>
+		                <th>ИНН</th>
+		                <th>Фамилия</th>
+		                <th>Имя</th>
+		                <th>Город</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr>
+		                <td>16545676532</td>
+		                <td>Петров</td>
+		                <td>Василий</td>
+		                <td>
+		                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td>34562322</td>
+		                <td>Сидоров</td>
+		                <td>Семен</td>
+		                <td>
+		                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td>4578665843</td>
+		                <td>Яковлев</td>
+		                <td>Михаил</td>
+		                <td>
+		                	<combobox model="sityCombobox.selected4" source="sityCombobox.list"></combobox>
+		                </td>
+		            </tr>
+		        </tbody>
+		    	</table>
+    		</div>
+	      <div class="col-md-2"></div>
+	    </div>
+		</div>
+
 		<script src="bower_components/jquery/dist/jquery.js"></script>
 		<script src="bower_components/angular/angular.js"></script>
 		<script src="js/app.js"></script>
@@ -192,16 +163,3 @@
 		<script src="lib/combobox/js/services/list.js"></script>
 	</body>
 </html>
-<!--
-+!- типичная ситуация
-- асинхронная загрузка
-- itemSelected перделки
-- без поиска
-- поиск даже при одном элементе
-- много видимых элементов
-- мало видимых элементов
-- пустой список
-- не выбранный текущий элемент
-- задизейбленный
-- большой список
-+!- одна и та же модель на все -->

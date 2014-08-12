@@ -42,7 +42,7 @@ div.menu_down>div.top {
 	bottom: 0;
 }
 
-div.menu_down>div.hide {
+div.menu_down>div.hidepopup {
 	display: none;
 	opacity: 0;
 }

@@ -5,7 +5,7 @@
 	exampleController.inject = ['$scope', '$q', '$timeout'];
 	function exampleController($scope, $q, $timeout) {
 
-		function createSityComboboxOptions() {
+		function createSityComboboxOptions(isNeedSearch, disable) {
 			var i = 0,
 				sitys;
 
@@ -27,9 +27,15 @@
 			}];
 
 			return {
-				list: sitys
+				list: sitys,
+				disable: disable,
+				options: {
+					needSearch: isNeedSearch,
+					
+				}
 			};
 		}
+
 		function createSimpleComboboxOptions () {
 			var selectList = [{
 				value: 'apple',
@@ -49,7 +55,7 @@
 				list: selectList,
 				options: {},
 				onSelect: function (newItem) {
-					console.log('new item is ' + newItem.value);
+					alert(newItem.value);
 				}
 			};
 			return combobox;
@@ -83,9 +89,16 @@
 			}, {
 				value: 'дверь',
 				id: 5
+			}, {
+				value: 'диван',
+				id: 6
+			},{
+				value: 'окно',
+				id: 7
 			}];
 			var combobox = {
 				list: function  () {
+					// эмуляция запроса на сервер
 					return $timeout(function  () {
 						return $q.when(selectList);
 					}, delay);
@@ -100,31 +113,17 @@
 			};
 			return combobox;
 		}
-
-		function createDisableComboboxOptions () {
-			var selectList = [{
-				value: 'стол',
-				id: 1
-			}, {
-				value: 'стул',
-				id: 2
-			}, {
-				value: 'тумбочка',
-				id: 3
-			}, {
-				value: 'шкаф',
-				id: 4
-			}, {
-				value: 'дверь',
-				id: 5
-			}];
-
-			var combobox = {
-				selected: selectList[selectList.length-1],
-				list: selectList,
-				disable: true
-			};			
-			return combobox;
+		
+		function createOneElementComboboxOptions() {
+			return {
+				list: [{
+					value: 'Путин',
+					id: 1
+				}],
+				options: {
+					countToShowSearch: 0
+				}
+			};
 		}
 
 		function createBigComboboxOptions (size) {
@@ -152,25 +151,24 @@
 				}
 				  return word;
 			}
+
 			var combobox = {
 				selected: selectList[0],
 				list: selectList,
 				options: {
 					itemsToShow: 8
-				},
-				onSelect: function (newItem) {
-					console.log('new item is ' + newItem.id);
 				}
 			};
 			return combobox;
 		}
 
-		$scope.simpleCombobox = createSimpleComboboxOptions();
-		$scope.emptyCombobox = createEmptyComboboxOptions();
+		$scope.sityCombobox = createSityComboboxOptions(true, false);
 		$scope.remoteCombobox = createRemoteComboboxOptions(1000); // задержка, эмуляция ожидания сервера
-		$scope.disableCombobox = createDisableComboboxOptions();
-		$scope.bigCombobox = createBigComboboxOptions(500); // количество элементов в списке
-
-		$scope.sityCombobox = createSityComboboxOptions();
+		$scope.simpleCombobox = createSimpleComboboxOptions();
+		$scope.withoutSearchCombobox = createSityComboboxOptions(false, false);
+		$scope.withSearchCombobox = createOneElementComboboxOptions();
+		$scope.emptyCombobox = createEmptyComboboxOptions();
+		$scope.disableCombobox = createSityComboboxOptions(true, true);
+		$scope.bigCombobox = createBigComboboxOptions(1000); // количество элементов в списке
 	}
 })(angular.module('testApp'));

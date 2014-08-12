@@ -1,7 +1,7 @@
 <div class="menu_down">
 	<a ng-click="openPopup()" ng-if="!disable">{{getCurrentItem()}}</a>
 	<p ng-if="disable">{{getCurrentItem()}}</p>
-	<div ng-class="{'hide': !isShowPopup}">
+	<div ng-class="{'hidepopup': !isShowPopup}">
 		<div class="arrow"></div>
 		<div class="search" ng-show="isShowSearch">
 			<input ng-model="searchText" ng-change="search()" type="text" placeholder="{{placeholderText}}">

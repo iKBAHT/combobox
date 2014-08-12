@@ -1,64 +1,11 @@
 * {
 	outline:none;
-	font-family: Helvetica, Arial;
 }
 
-div.center {
-	margin: 100px auto;
-	width: 600px;
+[ng-cloak] { 
+	display: none; 
 }
 
-div.center ul li {
-	list-style: none;
-	clear: both;
+div.container { 
+	margin-top: 15px; 
 }
-
-div.center li>div{
-	position: inline-block;
-	float: left;
-}
-
-div.center .text {
-	min-width: 300px; 
-}
-
-
-
-div.center .combobox {
-	margin-left: 10px; 
-}
-
-.lt, .lb, .rt, .rb  {
-	margin: 10px;
-	width: 100px;
-}
-
-/*левый верхний*/
-div.lt {
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 150px;
-}
-
-/*левый нижний*/
-div.lb {
-	position: fixed;
-	left: 0;
-	bottom: 0;
-}
-
-/*правый верхний*/
-div.rt {
-	position: fixed;
-	right: 0;
-	top: 0;
-}
-
-/*правый нижний*/
-div.rb {
-	position: fixed;
-	right: 0;
-	bottom: 0;
-}
-
