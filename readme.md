@@ -1,10 +1,11 @@
 # Combobox angularjs element
 
-###Как использовать
-Вставить 
+##Как использовать
+Вставить в html
 ```html
 <combobox source="list" model="model" on-item-selected="onSelect" disable="isDisable" options="options"></combobox> 
 ```
+##Настройки
 *  `source` - источник данных: 
 
 1.  массив с данными в формате `{id: ..., value: ...}`
@@ -29,7 +30,6 @@
   itemsToShow: 6                //сколько элементов влезает до появления скролла
 }
 ```
-
 ##Как запустить
 Выполнить в консоли:
 * bower install
